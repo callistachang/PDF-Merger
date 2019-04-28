@@ -39,7 +39,8 @@ while userinput == "yes" or userinput == "y":
                       "If so, type y or yes. If not, type n or no: ").lower()
     print("\n")
 
-userinput = input("Do you want to open all the PDF files you just merged?\nIf so, type y or yes. If not, type n or no: ").lower()
+userinput = input("Do you want to open all the PDF files you just merged?\n"
+                  "If so, type y or yes. If not, type n or no: ").lower()
 if userinput == "yes" or userinput == "y":
     for filepath in mergedfilepaths:
         os.startfile(filepath)

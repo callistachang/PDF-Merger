@@ -1,4 +1,6 @@
-import os, PyPDF2, getpass
+from os import makedirs, startfile
+from PyPDF2 import PdfFileMerger
+from getpass import getuser
 from datetime import datetime
 from tkinter import Tk
 from tkinter.filedialog import askopenfilenames
@@ -8,7 +10,7 @@ userinput = "yes"
 mergedfilepaths = []
 
 while userinput == "yes" or userinput == "y": 
-    merger = PyPDF2.PdfFileMerger()
+    merger = PdfFileMerger()
     
     print("Click on the PDF files you want to merge!\n"
           "Prest CTRL or SHIFT while clicking to choose multiple files.\n"
@@ -20,8 +22,8 @@ while userinput == "yes" or userinput == "y":
     for filepath in filepaths:
         merger.append(open(filepath, "rb"))
         
-    destfolder = f"C:\\Users\\{getpass.getuser()}\\Desktop\\PDFMerger Files"
-    os.makedirs(destfolder, exist_ok = True)
+    destfolder = f"C:\\Users\\{getuser()}\\Desktop\\PDFMerger Files"
+    makedirs(destfolder, exist_ok = True)
     
     dateandtime = datetime.now().isoformat(" ", "seconds")
     filename = str(dateandtime).replace(":", ".")
@@ -43,5 +45,5 @@ userinput = input("Do you want to open all the PDF files you just merged?\n"
                   "If so, type y or yes. If not, type n or no: ").lower()
 if userinput == "yes" or userinput == "y":
     for filepath in mergedfilepaths:
-        os.startfile(filepath)
+        startfile(filepath)
     

@@ -6,44 +6,56 @@ from tkinter import Tk
 from tkinter.filedialog import askopenfilenames
 
 Tk().withdraw()
-userinput = "yes"
-mergedfilepaths = []
+user_input = "yes"
+merged_filepath_list = []
 
-while userinput == "yes" or userinput == "y": 
+while user_input == "yes" or user_input == "y": 
     merger = PdfFileMerger()
-    
-    print("Click on the PDF files you want to merge!\n"
-          "Prest CTRL or SHIFT while clicking to choose multiple files.\n"
-          "Files will be merged according to their directory order.\n"
+
+    # instructions
+    print("\nClick on the PDF files you want to merge!\n"
+          "Press CTRL or SHIFT while clicking to choose multiple files.\n"
+          "Files will be merged according to their original directory order.\n"
           "The merged files will be stored in a folder 'PDFMerger Files' in Desktop.\n")
     
-    filepaths = askopenfilenames(title = "Select Files", filetypes = [("PDF Files", "*.pdf")])
-    filepaths = [filepath.replace("/", "\\") for filepath in filepaths]
-    for filepath in filepaths:
-        merger.append(open(filepath, "rb"))
-        
-    destfolder = f"C:\\Users\\{getuser()}\\Desktop\\PDFMerger Files"
-    makedirs(destfolder, exist_ok = True)
-    
-    dateandtime = datetime.now().isoformat(" ", "seconds")
-    filename = str(dateandtime).replace(":", ".")
-    
-    mergedfilepath = destfolder + f"\\{filename}.pdf"
-    with open(mergedfilepath, "wb") as result:
-        merger.write(result)
-        
-    print("Files successfully merged!\n"
-          f"{mergedfilepath}\n")
-    
-    mergedfilepaths.append(mergedfilepath)
-    
-    userinput = input("Do you want to merge more files?\n"
-                      "If so, type y or yes. If not, type n or no: ").lower()
-    print("\n")
+    # select files to merge
+    filepath_list = askopenfilenames(title="Select Files", filetypes=[("PDF Files", "*.pdf")])
 
-userinput = input("Do you want to open all the PDF files you just merged?\n"
-                  "If so, type y or yes. If not, type n or no: ").lower()
-if userinput == "yes" or userinput == "y":
-    for filepath in mergedfilepaths:
-        startfile(filepath)
+    # exit program if no files were selected
+    if not filepath_list:
+        break
+
+    # adjust for Windows filepath syntax
+    filepath_list = [filepath.replace("/", "\\") for filepath in filepath_list]
+
+    # append to PdfFileMerger
+    for filepath in filepath_list:
+        merger.append(open(filepath, "rb"))
     
+    # create a folder for the merged files
+    destfolder = f"C:\\Users\\{getuser()}\\Desktop\\PDFMerger Files"
+    makedirs(destfolder, exist_ok=True)
+    
+    # name merged file by current date and time
+    date_time = datetime.now().isoformat(" ", "seconds")
+    filename = str(date_time).replace(":", "-")
+    merged_filepath = destfolder + f"\\{filename}.pdf"
+    
+    # merge!
+    with open(merged_filepath, "wb") as result:
+        merger.write(result)
+    
+    print("Files successfully merged!\n"
+          f"{merged_filepath}\n")
+    
+    merged_filepath_list.append(merged_filepath)
+    
+    user_input = input("Do you want to merge more files?\n"
+                       "If so, type y or yes. If not, type n or no: ").lower()
+
+user_input = input("\nDo you want to open all the PDF files you just merged?\n"
+                   "If so, type y or yes. If not, type n or no: ").lower()
+
+if user_input == "yes" or user_input == "y":
+    for filepath in merged_filepath_list:
+        startfile(filepath)

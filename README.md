@@ -1,0 +1,1 @@
+A simple command line PDF merger for my own personal use.
